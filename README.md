@@ -1,0 +1,2 @@
+# RabbitMQ
+YuanQi MQ Helper
