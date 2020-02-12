@@ -142,12 +142,19 @@ namespace RabbitMQ
             {
                 var body = e.Body;
                 var message = Encoding.UTF8.GetString(body);
-                singleArrivalEvent(message);
-                //Trace.WriteLine(message);
+                try
+                {
+                    singleArrivalEvent(message);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("MQ回调异常：" + ex.Message + "\r\n" + ex.StackTrace);
+                }
                 channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
             }
             catch (Exception ea)
             {
+                Log.Error(ea.Message);
                 Trace.WriteLine(ea.Message);
             }
         }
@@ -180,10 +187,6 @@ namespace RabbitMQ
             channel.Close();
             connection.Close();
             connection.Dispose();
-
         }
-
     }
-
-
 }

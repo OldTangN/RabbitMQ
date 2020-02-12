@@ -9,7 +9,7 @@ namespace RabbitMQ
     /// <summary>
     /// 服务器MQ
     /// </summary>
-    public class ServerMQ:RabbitMQBase
+    public class ServerMQ : RabbitMQBase
     {
         public override void SentMessage(string message)
         {
@@ -72,12 +72,10 @@ namespace RabbitMQ
                 consumer.Received += consumer_Received;
                 channel.BasicConsume(MQConfig.MqUpQueueName, autoAck: false, consumer: consumer);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error("ReceiveMessage异常：" + e.Message + "\r\n" + e.StackTrace);
             }
         }
-
-        
     }
 }

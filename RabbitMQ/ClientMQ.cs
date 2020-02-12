@@ -68,10 +68,8 @@ namespace RabbitMQ
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e.Message);
+                Log.Error("ReceiveMessage异常：" + e.Message + "\r\n" + e.StackTrace);
             }
         }
     }
-
-
 }

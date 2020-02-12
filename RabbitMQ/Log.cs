@@ -47,8 +47,6 @@ namespace RabbitMQ
                 {
                     if (type == LOG_TYPE.LOG_TYPE_DEBUG)
                     {
-#if DEBUG
-#region
                         StringBuilder sb = new StringBuilder();
                         DateTime dt_now = DateTime.Now.ToLocalTime();
                         sb.Append("[DBUG] ");
@@ -112,7 +110,6 @@ namespace RabbitMQ
                             DirectoryInfo directoryInfo = new DirectoryInfo(strfilepath);
                             //无此目录 创建目录
                             directoryInfo.Create();
-
                         }
                         switch (type)
                         {
