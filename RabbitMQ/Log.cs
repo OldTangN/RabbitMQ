@@ -89,15 +89,12 @@ namespace RabbitMQ
                                 , str_log_date_
                                 , n_log_num_);
                         }
-#endregion
-#endif
                     }
                     else
                     {
                         StringBuilder sb = new StringBuilder();
                         DateTime dt_now = DateTime.Now.ToLocalTime();
                         //按照这个时间看看文件夹里有没有这个按这个年月的文件夹 没有就创建
-                    
                         string strfilepath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
                         string strfilepathdate = string.Format("{0}-{1}", dt_now.Year, dt_now.Month);
                         strfilepath +=@"MQ_log\"+ strfilepathdate;
