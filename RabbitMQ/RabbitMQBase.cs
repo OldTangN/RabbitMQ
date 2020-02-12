@@ -1,9 +1,9 @@
-﻿using System;
+﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 namespace RabbitMQ
 {
     public abstract class RabbitMQBase
@@ -30,7 +30,7 @@ namespace RabbitMQ
 
         protected static MqConfigDom MQConfig;
 
-        public RabbitMQBase()
+        protected RabbitMQBase()
         {
             connection = CreateConnection();
             channel = connection.CreateModel();
@@ -160,7 +160,7 @@ namespace RabbitMQ
         protected void Channel_BasicAcks(object sender, BasicAckEventArgs e)
         {
             //e.DeliveryTag是一个整数类型的消息传递标记，在同一个channel中每次psuh消息后该值都会自增
-            Trace.WriteLine("消息已成功送达：" + e.DeliveryTag);
+            //Trace.WriteLine("消息已成功送达：" + e.DeliveryTag);
         }
         /// <summary>
         /// 发送失败
@@ -169,7 +169,7 @@ namespace RabbitMQ
         /// <param name="e"></param>
         protected void Model_BasicNacks(object sender, BasicNackEventArgs e)
         {
-            Trace.WriteLine("消息已送达失败：" + e.DeliveryTag);
+            //Trace.WriteLine("消息已送达失败：" + e.DeliveryTag);
         }
         /// <summary>
         /// 关闭通道 

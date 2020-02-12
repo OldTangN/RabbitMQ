@@ -12,6 +12,6 @@ namespace RabbitMQ.YQMsg
         {
             this.MESSAGE_TYPE = "task";
         }
-        public List<TaskData> DATA { get; set; } = new List<TaskData>();
+        public TaskData DATA { get; set; }
     }
 }

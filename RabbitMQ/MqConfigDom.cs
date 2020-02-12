@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace RabbitMQ
 {
     public class MqConfigDom
-    { /// <summary>
-      /// 消息队列的地址
-      /// </summary>
+    {
+        /// <summary>
+        /// 消息队列的地址
+        /// </summary>
         public string MqHost { get; set; }
         /// <summary>
         /// 用户名
@@ -24,7 +25,7 @@ namespace RabbitMQ
         /// </summary>
         public string MqPort { get; set; }
 
-          
+
         /// <summary>
         /// 上行数据交换机
         /// </summary>

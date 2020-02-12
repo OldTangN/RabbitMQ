@@ -17,6 +17,7 @@ namespace RabbitMQ.YQMsg
         /// </summary>
         public string STATUS { get; set; }
     }
+
     public enum HeartStatus
     {
         /// <summary>
