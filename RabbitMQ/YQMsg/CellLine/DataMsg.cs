@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQ.YQMsg
+namespace RabbitMQ.YQMsg.CellLine
 {
     public class DataMsg : MsgBase
     {

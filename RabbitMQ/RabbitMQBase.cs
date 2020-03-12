@@ -1,37 +1,32 @@
-﻿using RabbitMQ.Client;
+﻿using MyLogLib;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Diagnostics;
 using System.Text;
 using System.Threading;
 namespace RabbitMQ
 {
     public abstract class RabbitMQBase
     {
-        //委托
-        public delegate void CodeArrivalhandle(string data);
         /// <summary>
-        /// 接受数据
+        /// 接收消息回调
         /// </summary>
-        public event CodeArrivalhandle CodeArrivalEvent;
-
-        /// <summary>
-        /// 单一队列
-        /// </summary>
-        /// <param name="data"></param>
-        public delegate void SingleArrivalhandle(string data);
-        /// <summary>
-        /// 单一队列
-        /// </summary>
-        public event SingleArrivalhandle singleArrivalEvent;
+        public event Action<string> OnReceived;
 
         protected readonly IConnection connection;
         protected readonly IModel channel;
 
-        protected static MqConfigDom MQConfig;
-
-        protected RabbitMQBase()
+        public string MqHost { get; private set; }
+        public string MqUserName { get; private set; }
+        public string MqPassword { get; private set; }
+       
+        protected RabbitMQBase(string mqHost, string mqUserName, string mqPwd)
         {
+            this.MqHost = mqHost;
+            this.MqUserName = mqUserName;
+            this.MqPassword = mqPwd;
+            
+           
             connection = CreateConnection();
             channel = connection.CreateModel();
         }
@@ -40,16 +35,14 @@ namespace RabbitMQ
         /// 创建一个IConnection。
         /// </summary>
         /// <returns></returns>
-        internal static IConnection CreateConnection()
+        internal IConnection CreateConnection()
         {
-            //获取MQ的配置
-            MQConfig = CreateConfigDomInstance();
             const ushort hearbeat = 60;
             var factory = new ConnectionFactory()
             {
-                HostName = MQConfig.MqHost,
-                UserName = MQConfig.MqUserName,
-                Password = MQConfig.MqPassword,
+                HostName = MqHost,
+                UserName = MqUserName,
+                Password = MqPassword,
                 //Port = int.Parse(MQConfig.MqPort),
                 //心跳超时时间
                 RequestedHeartbeat = hearbeat,
@@ -64,98 +57,62 @@ namespace RabbitMQ
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e.Message);
-                Log.Error(e.Message);
+                MyLog.WriteLog("创建MQ连接失败！", e.Message);
                 Thread.Sleep(2000);
                 CreateConnection();
             }
             //创建连接对象
             return connection;
         }
-        /// <summary>
-        /// 创建MqConfigDom一个实例。
-        /// </summary>
-        /// <returns>MqConfigDom</returns>
-        internal static MqConfigDom CreateConfigDomInstance()
-        {
-            return GetConfigFormAppStting();
-        }
-        /// <summary>
-        ///  获取物理配置文件中的配置项目。
-        /// </summary>
-        /// <returns></returns>
-        private static MqConfigDom GetConfigFormAppStting()
-        {
-            var result = new MqConfigDom();
-            IniFiles ifs = new IniFiles("MQSet.ini");
-            var mqHost = ifs.ReadString("mqdata", "MqHost", "");
-            result.MqHost = mqHost;
 
-            var mqUserName = ifs.ReadString("mqdata", "MqUserName", "");
-            result.MqUserName = mqUserName;
-
-            var mqPassword = ifs.ReadString("mqdata", "MqPassword", "");
-            result.MqPassword = mqPassword;
-
-            var mqPort = ifs.ReadString("mqdata", "Mqport", "");
-            result.MqPort = mqPort;
-
-            var MqUpQueueName = ifs.ReadString("mqdata", "MqUpQueueName", "");
-            result.MqUpQueueName = MqUpQueueName;
-            var MqDownQueueName = ifs.ReadString("mqdata", "MqDownQueueName", "");
-            result.MqDownQueueName = MqDownQueueName;
-
-            var MqUpExchange = ifs.ReadString("mqdata", "MqUpExchange", "");
-            result.MqUpExchange = MqUpExchange;
-
-            var MqDownExchange = ifs.ReadString("mqdata", "MqDownExchange", "");
-            result.MqDownExchange = MqDownExchange;
-
-            return result;
-        }
         /// <summary>
         /// 创建一个Model
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        internal static IModel CreateModel(IConnection connection)
+        internal IModel CreateModel(IConnection connection)
         {
             return connection.CreateModel();
         }
 
 
         /// <summary>
-        /// 发送信息 纯虚
+        /// 客户端发送上行消息
         /// </summary>
-        public abstract void SentMessage(string message);
-        public abstract void SentMessage(string message, string routing_key);
+        public abstract void SendMessage(string message);
 
         /// <summary>
-        /// 读取数据 纯虚
+        /// 服务端发送下行消息
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="routing_key">路由键</param>
+        public abstract void SendMessage(string message, string routing_key);
+
+        /// <summary>
+        /// 客户端读取下行消息 or 服务端读取上行消息
         /// </summary>
         /// <param name="queue"></param>
         public abstract void ReceiveMessage();
 
         protected void consumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            var body = e.Body;
+            var message = Encoding.UTF8.GetString(body);
             try
             {
-                var body = e.Body;
-                var message = Encoding.UTF8.GetString(body);
-                try
-                {
-                    singleArrivalEvent(message);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("MQ回调异常：" + ex.Message + "\r\n" + ex.StackTrace);
-                }
                 channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
             }
-            catch (Exception ea)
+            catch (Exception ex)
             {
-                Log.Error(ea.Message);
-                Trace.WriteLine(ea.Message);
+                MyLog.WriteLog("BasicAck异常！", ex);
+            }
+            try
+            {
+                OnReceived?.Invoke(message);
+            }
+            catch (Exception ex)
+            {
+                MyLog.WriteLog("OnReceived回调异常！", ex);
             }
         }
 
