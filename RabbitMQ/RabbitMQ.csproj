@@ -54,19 +54,6 @@
     <Compile Include="RabbitMQBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerMQ.cs" />
-    <Compile Include="YQMsg\BarcodeMsg.cs" />
-    <Compile Include="YQMsg\CellLine\DataMsg.cs" />
-    <Compile Include="YQMsg\CellLine\ExecuteMsg.cs" />
-    <Compile Include="YQMsg\CellLine\RltData.cs" />
-    <Compile Include="YQMsg\ControlMsg.cs" />
-    <Compile Include="YQMsg\EDMI\DataMsg.cs" />
-    <Compile Include="YQMsg\EDMI\ExecuteMsg.cs" />
-    <Compile Include="YQMsg\HeartBeatMsg.cs" />
-    <Compile Include="YQMsg\MsgBase.cs" />
-    <Compile Include="YQMsg\PLCMsg.cs" />
-    <Compile Include="YQMsg\EDMI\RltData.cs" />
-    <Compile Include="YQMsg\TaskData.cs" />
-    <Compile Include="YQMsg\TaskMsg.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using CellLine.Msg;
+using Newtonsoft.Json;
 using RabbitMQ;
-using RabbitMQ.YQMsg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,7 +42,7 @@ namespace WpfApp1
             try
             {
                 server?.Close();
-                server = new ServerMQ("47.104.141.161", "admin", "QAZqaz01", "产线数据队列", "生产控制交换机");
+                server = new ServerMQ("47.104.141.161", "admin", "QAZqaz01", "1线主控管理", "1线下行交换机");
                 server.OnReceived += Server_OnReceived;
                 server.ReceiveMessage();
                 ShowLog("服务端已启动！");
@@ -49,7 +50,7 @@ namespace WpfApp1
             catch (Exception ex)
             {
                 ShowLog(ex.Message);
-            }           
+            }
         }
 
         private void Server_OnReceived(string data)
@@ -72,7 +73,7 @@ namespace WpfApp1
             try
             {
                 client?.Close();
-                client = new ClientMQ("47.104.141.161", "yuanqimq", "QAZqaz01", "产线数据交换机", "生产控制交换机", "PLC");
+                client = new ClientMQ("47.104.141.161", "yuanqimq", "QAZqaz01", "1线上行交换机", "1线下行交换机", "1线PLC管理");
                 client.OnReceived += Client_OnReceived;
                 client.ReceiveMessage();
                 ShowLog("客户端已启动！");
@@ -124,20 +125,69 @@ namespace WpfApp1
             };
             string strMsg = JsonConvert.SerializeObject(heartMsg);
             server.SendMessage(strMsg, txtRouteKey.Text);
+
+            ExecuteMsg execMsg = new ExecuteMsg()
+            {
+                DATA = new List<RltData>() { new RltData() { Bar_code = "d123" } },
+                DEVICE_TYPE = "E015",
+                NO = "E01501",
+            };
+            strMsg = JsonConvert.SerializeObject(execMsg);
+            server.SendMessage(strMsg, txtRouteKey.Text);
         }
 
         private void BtnClientSend_Click(object sender, RoutedEventArgs e)
         {
-            HeartBeatMsg heartMsg = new HeartBeatMsg()
+            //PLCMsg msg = new PLCMsg()
+            //{
+            //    NO = "DM101",
+            //    STATUS = 1,
+            //};
+
+            //BarcodeMsg msg = new BarcodeMsg("E00101")
+            //{
+
+            //};
+
+            HeartBeatMsg msg = new HeartBeatMsg()
             {
-                DEVICE_TYPE = "A",
+                DEVICE_TYPE = "E003",
                 //MESSAGE_TYPE = "heart",//
-                NO = "A1",
-                STATUS = "1",
+                NO = "E003011",
+                STATUS = 1,
                 time_stamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
-            string strMsg = JsonConvert.SerializeObject(heartMsg);
+            string strMsg = JsonConvert.SerializeObject(msg);
+
             client.SendMessage(strMsg);
+        }
+
+        private async void BtnTest_Click(object sender, RoutedEventArgs e)
+        {
+            ShowLog("Call2000");
+            await GetRlt2000();
+            ShowLog("Call4000");
+            await GetRlt4000();
+        }
+
+        private async Task<bool> GetRlt4000()
+        {
+            return await Task.Run<bool>(() =>
+            {
+                Thread.Sleep(4000);
+                ShowLog("4000ms End");
+                return true;
+            });
+        }
+
+        private async Task<bool> GetRlt2000()
+        {
+            return await Task.Run<bool>(() =>
+            {
+                Thread.Sleep(2000);
+                ShowLog("2000ms End");
+                return true;
+            });
         }
     }
 }

@@ -11,24 +11,20 @@ namespace RabbitMQ.YQMsg.CellLine
         public string WORK_ID { get; set; }//设备序号
 
         /// <summary>
-        /// EDMI表厂内（上壳）码或LCD码
+        /// 表壳码
         /// </summary>
         public string Bar_code { get; set; }
 
         /// <summary>
-        /// EDMI表厂内（上壳）码或LCD码
+        /// 厂内码
         /// </summary>
         public string Factory_code { get; set; }
 
         /// <summary>
-        /// EDMI表MSN码
+        /// 铭牌码
         /// </summary>
-        public string MSN { get; set; }
+        public string Nameplate { get; set; }
 
-        /// <summary>
-        /// EDMI表GUID码
-        /// </summary>
-        public string GUID { get; set; }
 
         /// <summary>
         /// 上一道工序的结果 0 为合格 1为不合格，如果上道工序就不合格那么本工序也不用做了
