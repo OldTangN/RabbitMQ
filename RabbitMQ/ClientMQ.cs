@@ -12,8 +12,17 @@ namespace RabbitMQ
     /// </summary>
     public class ClientMQ : RabbitMQBase
     {
+        /// <summary>
+        /// 上行交换机
+        /// </summary>
         public string MqUpExchange { get; private set; }
+        /// <summary>
+        /// 下行队列
+        /// </summary>
         public string MqDownQueueName { get; private set; }
+        /// <summary>
+        /// 下行交换机
+        /// </summary>
         public string MqDownExchange { get; private set; }   
 
         /// <summary>
@@ -99,7 +108,8 @@ namespace RabbitMQ
                 var consumer = new EventingBasicConsumer(channel);
                 //绑定接收消息
                 consumer.Received += consumer_Received;
-                channel.BasicConsume(MqDownQueueName, autoAck: false, consumer: consumer);
+                //channel.BasicConsume(MqDownQueueName, autoAck: false, consumer: consumer);
+                channel.BasicConsume(MqDownQueueName, noAck: false, consumer: consumer);
             }
             catch (Exception e)
             {

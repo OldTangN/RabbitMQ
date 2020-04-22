@@ -88,7 +88,8 @@ namespace RabbitMQ
                 var consumer = new EventingBasicConsumer(channel);
                 //绑定接收消息
                 consumer.Received += consumer_Received;
-                channel.BasicConsume(MqUpQueueName, autoAck: false, consumer: consumer);
+                //channel.BasicConsume(MqUpQueueName, autoAck: false, consumer: consumer);
+                channel.BasicConsume(MqUpQueueName, noAck: false, consumer: consumer);
             }
             catch (Exception e)
             {

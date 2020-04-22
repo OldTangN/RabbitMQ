@@ -8,18 +8,18 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button x:Name="btnStartServer" Content="启动服务" HorizontalAlignment="Left" Margin="23,23,0,0" VerticalAlignment="Top" Width="75" Click="BtnStartServer_Click"/>
-        <RichTextBox x:Name="rtxtMsg" HorizontalAlignment="Left" Height="351" Margin="313,24,0,0" VerticalAlignment="Top" Width="457">
+        <RichTextBox x:Name="rtxtMsg" HorizontalAlignment="Left" Height="351" Margin="334,24,0,0" VerticalAlignment="Top" Width="436">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <Button x:Name="btnStartClient" Content="启动客户端" HorizontalAlignment="Left" Margin="23,73,0,0" VerticalAlignment="Top" Width="75" Click="BtnStartClient_Click"/>
-        <Button x:Name="btnServerSend" Content="服务端发送" HorizontalAlignment="Left" Margin="124,23,0,0" VerticalAlignment="Top" Width="75" Click="BtnServerSend_Click"/>
-        <TextBox x:Name="txtRouteKey" HorizontalAlignment="Left" Height="23" Margin="204,19,0,0" TextWrapping="Wrap" Text="PLC" VerticalAlignment="Top" Width="89"/>
-        <Button x:Name="btnClientSend" Content="客户端发送" HorizontalAlignment="Left" Margin="124,73,0,0" VerticalAlignment="Top" Width="75" Click="BtnClientSend_Click"/>
-        <Button Name="btnTest" Click="BtnTest_Click" Content="测试" HorizontalAlignment="Left" Margin="23,140,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnStartClient" Content="启动客户端" HorizontalAlignment="Left" Margin="23,133,0,0" VerticalAlignment="Top" Width="75" Click="BtnStartClient_Click"/>
+        <Button x:Name="btnServerSend" Content="下行发送至" HorizontalAlignment="Left" Margin="124,23,0,0" VerticalAlignment="Top" Width="75" Click="BtnServerSend_Click"/>
+        <TextBox x:Name="txtRouteKey" HorizontalAlignment="Left" Height="23" Margin="204,21,0,0" TextWrapping="Wrap" Text="1线PLC管理" VerticalAlignment="Top" Width="113"/>
+        <Button x:Name="btnClientSend" Content="客户端上行发送" HorizontalAlignment="Left" Margin="124,133,0,0" VerticalAlignment="Top" Width="114" Click="BtnClientSend_Click"/>
+        <Button Name="btnTest" Click="BtnTest_Click" Content="测试" HorizontalAlignment="Left" Margin="23,277,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </Window>

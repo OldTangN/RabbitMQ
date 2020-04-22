@@ -6,20 +6,41 @@ using System.Text;
 using System.Threading;
 namespace RabbitMQ
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class RabbitMQBase
     {
         /// <summary>
         /// 接收消息回调
         /// </summary>
         public event Action<string> OnReceived;
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly IConnection connection;
+        /// <summary>
+        /// 
+        /// </summary>
         protected readonly IModel channel;
-
+        /// <summary>
+        /// 服务器IP
+        /// </summary>
         public string MqHost { get; private set; }
+        /// <summary>
+        /// 用户名
+        /// </summary>
         public string MqUserName { get; private set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
         public string MqPassword { get; private set; }
-       
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="mqHost"></param>
+       /// <param name="mqUserName"></param>
+       /// <param name="mqPwd"></param>
         protected RabbitMQBase(string mqHost, string mqUserName, string mqPwd)
         {
             this.MqHost = mqHost;
@@ -93,7 +114,11 @@ namespace RabbitMQ
         /// </summary>
         /// <param name="queue"></param>
         public abstract void ReceiveMessage();
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void consumer_Received(object sender, BasicDeliverEventArgs e)
         {
             var body = e.Body;
